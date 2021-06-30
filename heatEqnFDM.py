@@ -20,14 +20,14 @@ def plot(t, u):
 # %% markdown
 # the function to animate our plots
 # %% animator
-def animate(plot, u, f, inv, name):
-    anim=ani.FuncAnimation(plt.figure(), plot, fargs=(u,), frames=f, interval=inv)
+def animate(plot, u, f, name, inv):
+    anim=ani.FuncAnimation(plt.figure(), plot, frames=f, fargs=(u,), interval=inv)
     anim.save(name)
 # %% markdown
 # a function loop through our array and do the calculation
 # %% looper
 def calculate(type, u, c_2=None, res=None):
-    for t in range(1, u.shape[2]):
+    for t in range(0, u.shape[2]-1):
         for x in range(1, u.shape[0]-1):
             for y in range(1, u.shape[1]-1):
                 eqn(type, u, x, y, t, c_2, res)
@@ -38,7 +38,7 @@ def eqn(type, u, x, y, t, c_2, res):
     if (type=="steady"):
         u[x][y][0]=(1/4)*(u[x+1][y][0]+u[x-1][y][0]+u[x][y+1][0]+u[x][y-1][0])
     if(type=="transient"):
-        u[x][y][t]=(res[2]**(-1)*(res[1]**(-2)*(u[x+1][y][t]+u[x-1][y][t])+res[0]**(-2)*(u[x][y+1][t]+u[x][y-1][t]))+res[0]**(-2)*res[1]**(-2)*u[x][y][t-1])/(res[0]**(-2)*res[1]**(-2)+2*res[2]**(-1)*c_2*(res[0]**(-2)+res[1]**(-2)))
+        u[x][y][t+1]=u[x][y][t]+(res[2]**-1*c_2*(res[0]res[1])**2)*(res[1]**-2*(u[x+1][y][t]+u[x-1][y][t]-2*u[x][y][t])+res[0]**-2*(u[x][y+1][t]+u[x][y-1][t]-2*u[x][y][t]))
 # %% markdown
 # Now let's define our boundary conditions
 # For Dirichlet's boundary condition we have the value of boundaries.
@@ -68,8 +68,8 @@ def neumann(u, edge):
 # Let's put some data that represents the system
 # in the (y, x, t) format
 # %% data
-sys_scale=[1,1,30]
-res=[25,25,2]
+sys_scale=[1,1,10]
+res=[25,25,10]
 c_2=1
 bound=[100,100,100,100]
 # %% markdown
@@ -114,7 +114,7 @@ calculate("transient", u, c_2, res)
 # %% markdown
 # Let's try to animate it
 # %% Animate Dirichlet's transient state
-animate(plot, u, u.shape[2], 100, "dirichlet_trans.gif")
+animate(plot, u, u.shape[2], "dirichlet_trans.gif", 100)
 # %% markdown
 # Let's try the Neumann's boundary conditions
 # %% Neumann's transient
@@ -125,7 +125,7 @@ calculate("transient", u, c_2, res)
 # %% markdown
 # Let's get it animated
 # %% Animate Neumann's transient state
-animate(plot, u, u.shape[2], 100, "neumann_trans.gif")
+animate(plot, u, u.shape[2], "neumann_trans.gif")
 # %% markdown
 # below is the experimentation zone
 # %% trial
