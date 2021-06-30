@@ -12,14 +12,16 @@ import matplotlib.animation as ani
 # Before we get on with the problem at hand, let's make our life easier by defining function for frequent tasks
 # the function to plot heatmap contours
 # %% plotter
-def plot(t):
+def plot(t, u):
+    plt.clf()
     plt.contourf(u[:,:,t], cmap=plt.cm.jet)
+    plt.colorbar()
     return plt
 # %% markdown
 # the function to animate our plots
 # %% animator
 def animate(plot, u, f, inv, name):
-    anim=ani.FuncAnimation(plt.figure(), plot, frames=f, interval=inv)
+    anim=ani.FuncAnimation(plt.figure(), plot, fargs=(u,), frames=f, interval=inv)
     anim.save(name)
 # %% markdown
 # a function loop through our array and do the calculation
@@ -67,7 +69,7 @@ def neumann(u, edge):
 # in the (y, x, t) format
 # %% data
 sys_scale=[1,1,30]
-res=[25,25,5]
+res=[25,25,2]
 c_2=1
 bound=[100,100,100,100]
 # %% markdown
