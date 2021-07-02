@@ -9,6 +9,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as ani
+# %% visualize
+def visualize(type, u, name, inv=200):
+    if (type is steady):
+        f=plot(0, u)
+        f.savefig(name)
+    else:
+        animate(plot, u, u.shape[2], name, inv)
 # %% markdown
 # ---
 # ### Before we get on with the problem at hand, let's make our life easier by defining function for frequent tasks
@@ -25,7 +32,7 @@ def plot(t, u):
 # ---
 # The function to animate our plots- takes the function responsible for creating each frame, the data set(expected a 3d array-like structure), number of frames to add in the movie, name to save the movie file with, and the timespan of each interval(optional, default value is 200 ms)
 # %% animator
-def animate(plot, u, f, name, inv=200):
+def animate(plot, u, f, name, inv):
     anim=ani.FuncAnimation(plt.figure(), plot, frames=f, fargs=(u,), interval=inv)
     anim.save(name)
 # %% markdown
@@ -33,23 +40,26 @@ def animate(plot, u, f, name, inv=200):
 # The toplevel function to be accessed by the main code
 # %% calculate
 def calculate(bound, type, u, c=0.005, resolution=[1,1,1], accuracy=1):
-    type(bound, type, u, c, resolution, accuracy)
+    if(type is steady):
+        std(bound, type, u, c, resolution, accuracy)
+    if(type is transient):
+        trans(bound, type, u, c, resolution, accuracy)
 # %% markdown
 # ---
 # The function to manage the steady state computation
 # %% steady
-def steady(bound, type, u, c_2, res, acc):
+def std(bound, type, u, c_2, res, acc):
     k=1
     while(k):
         grid_fill(bound, type, 0, u, c_2, res)
-        if(not np.any(abs(u[:,:,1]-u[:,:,0])>acc)):
+        if(np.all(abs(u[:,:,1]-u[:,:,0])<=acc)):
             k=0
         u[:,:,0]=u[:,:,1]
 # %% markdown
 # ---
 # The function to manage transient state computation
 # %% transient
-def transient(bound, type, u, c_2, res, acc):
+def trans(bound, type, u, c_2, res, acc):
     for t in range(u.shape[2]-1):
         grid_fill(bound, type, t, u, c_2, res)
 # %% markdown
@@ -57,23 +67,39 @@ def transient(bound, type, u, c_2, res, acc):
 # A function to loop through our data and do the calculation - takes the type of equation to calculate (one of the two strings "steady" or "transient"), the data-set, the value of $c^2$ as in the original differential equation at the top of this documentation, and the resolution list, explained more later.
 #
 # _The steady state area is under construction and may be full of rubbish_
+# %% edge
+def edge(x, y):
+    if (y== u.shape[0]-1 and x != 0):
+        return 0
+    elif (x== u.shape[1]-1 and y!=u.shape[0]-1):
+        return 2
+    elif (y==0 and x!=u.shape[1]-1):
+        return 4
+    elif (x==0 and y != 0):
+        return 6
+    else:
+        return -1
+# %% corner
+def corner(x, y):
+    if (y== u.shape[0]-1 and x == 0):
+        return 3
+    elif (x== u.shape[1]-1 and y==u.shape[0]-1):
+        return 0
+    elif (y==0 and x==u.shape[1]-1):
+        return 1
+    elif (x==0 and y == 0):
+        return 2
+    else:
+        return -1
 # %% grid fill
 def grid_fill(bound, type, t, u, c_2, res):
         for y in range(0, u.shape[0]):
             for x in range(0, u.shape[1]):
-                if (y== u.shape[0]-1 and x != 0):
-                    bound[0](bound[1], u, x, y, t, c_2, res)
-                elif (x== u.shape[1]-1 and y!=u.shape[0]-1):
-                    bound[2](bound[3], u, x, y, t, c_2, res)
-                elif (y==0 and x!=u.shape[1]-1):
-                    bound[4](bound[5], u, x, y, t, c_2, res)
-                elif (x==0 and y != 0):
-                    bound[6](bound[7], u, x, y, t, c_2, res)
+                ev=edge(x,y)
+                if(ev!=-1):
+                    bound[ev](bound[ev+1], type, u, x, y, t, c_2, res)
                 else:
-                    if(type is steady):
-                        std_eqn(u, x, y, t)
-                    if(type is transient):
-                        trans_eqn(u, x, y, t, c_2, res)
+                    type(u, x, y, t, c_2, res, xp=u[y][x+1][t], xm=u[y][x-1][t], yp=u[y+1][x][t], ym=u[y-1][x][t])
 # %% markdown
 # ---
 # A function to represent the eqn- takes the type of the equation to acess(same as the calculate() function defined above), the dataset, the value of the grid point in the dataset to calculate for in the sequence, x, y, t, then the values of $c^2$, and the resolution list, explained in detail later.
@@ -84,14 +110,10 @@ def grid_fill(bound, type, t, u, c_2, res):
 #
 # _The steady state area is under construction and may be full of rubbish_
 # %% equation
-def std_eqn(u, x, y, t):
-        u[y][x][1]=(1/4)*(u[y+1][x][0]+u[y-1][x][0]+u[y][x+1][0]+u[y][x-1][0])
-def trans_eqn(u, x, y, t, c_2, res):
-        u[y][x][t+1]=u[y][x][t]+(res[2]**-1*c_2*(res[1]*res[0])**2)*(res[0]**-2*(u[y][x+1][t]+u[y][x-1][t]-2*u[y][x][t])+res[1]**-2*(u[y+1][x][t]+u[y-1][x][t]-2*u[y][x][t]))
-def std_neu():
-    print("under construction")
-def trans_neu():
-    print("under construction")
+def steady(u, x, y, t, c_2, res, xp, xm, yp, ym):
+        u[y][x][t+1]=(1/4)*(yp+ym+xp+xm)
+def transient(u, x, y, t, c_2, res, xp, xm, yp, ym):
+        u[y][x][t+1]=u[y][x][t]+(res[2]**-1*c_2*(res[1]*res[0])**2)*(res[0]**-2*(xp+xm-2*u[y][x][t])+res[1]**-2*(yp+ym-2*u[y][x][t]))
 # %% markdown
 # ---
 #
@@ -103,7 +125,7 @@ def trans_neu():
 #
 # The function takes the data set, and a dictionary with strings denoting sides("top", "bottom", "left", "right") and the corresponding value of the function
 # %% Dirichlet
-def dirichlet(value, u, x, y, t, c_2, res):
+def dirichlet(value, type, u, x, y, t, c_2, res):
     u[y, x,:]=value
 # %% markdown
 # ---
@@ -113,15 +135,25 @@ def dirichlet(value, u, x, y, t, c_2, res):
 #
 # _This area is broken_
 # %% Neumann
-def neumann(edge, u, x, y, t, c_2, res):
-    if("top" in edge):
-        u[u.shape[1]-1,:,:]=0
-    if("bottom" in edge):
-        u[0,:,:]=0
-    if("right" in edge):
-        u[:,u.shape[0]-1,:]=0
-    if("left" in edge):
-        u[:,0,:]=0
+def neumann(value, type, u, x, y, t, c_2, res):
+    ev=edge(x,y)
+    cv=corner(x,y)
+    if (ev==0 and cv==-1):
+        type(u, x, y, t, c_2, res, xp=u[y][x+1][t], xm=u[y][x-1][t], ym=u[y-1][x][t], yp=u[y-1][x][t]+2*res[0]**-1*value)
+    elif(ev==0 and cv==0):
+        type(u, x, y, t, c_2, res, yp=u[y-1][x][t]+2*res[0]**-1*value, xp=u[y][x-1][t]+2*res[1]**-1*value, xm=u[y][x-1][t], ym=u[y-1][x][t])
+    elif (ev==1 and cv==-1):
+        type(u, x, y, t, c_2, res, xp=u[y][x-1][t]+2*res[1]**-1*value, xm=u[y][x-1][t], yp=u[y+1][x][t], ym=u[y-1][x][t])
+    elif (ev==1 and cv==1):
+        type(u, x, y, t, c_2, res, xp=u[y][x-1][t]+2*res[1]**-1*value, ym=u[y+1][x][t]-2*res[0]**-1*value, xm=u[y][x-1][t], yp=u[y+1][x][t])
+    elif (ev==2 and cv==-1):
+        type(u, x, y, t, c_2, res, ym=u[y+1][x][t]-2*res[0]**-1*value, xp=u[y][x+1][t], xm=u[y][x-1][t], yp=u[y+1][x][t])
+    elif (ev==2 and cv==2):
+        type(u, x, y, t, c_2, res, ym=u[y+1][x][t]-2*res[0]**-1*value, xm=u[y][x+1][t]-2*res[1]**-1*value, xp=u[y][x+1][t], yp=u[y+1][x][t])
+    elif (ev==3 and cv==-1):
+        type(u, x, y, t, c_2, res, xm=u[y][x+1][t]-2*res[1]**-1*value, xp=u[y][x+1][t], yp=u[y+1][x][t], ym=u[y-1][x][t])
+    elif (ev==3 and cv==3):
+        type(u, x, y, t, c_2, res, xm=u[y][x+1][t]-2*res[1]**-1*value, yp=u[y-1][x][t]+2*res[0]**-1*value, xp=u[y][x+1][t], ym=u[y-1][x][t])
 # %% markdown
 # ---
 #
@@ -139,11 +171,12 @@ def neumann(edge, u, x, y, t, c_2, res):
 # then we have a list of boundary value of the function in the clockwise order, i.e. top, right, bottom, left
 # %% data
 sys_scale=[5,5,60]
-res=[10,10,5]
+res=[10,10,2]
 c_2=0.005
-acc=1
-bound=[dirichlet, 100, dirichlet, 100, dirichlet, 100, dirichlet, 100]
+acc=.01
+bound=[neumann, 100, dirichlet, 400, neumann, 100, dirichlet, 800]
 analysis=transient
+name="analysis.gif"
 inv=50
 # %% markdown
 # ---
@@ -171,56 +204,9 @@ arr=np.zeros((sys_scale[1]*res[1]+1,sys_scale[0]*res[0]+1,sys_scale[2]*res[2]+1)
 # _The steady state area is under construction and maybe full of rubbish_
 # %% Dirichlet's steady
 u=np.copy(arr)
-calculate(bound, steady, u, accuracy=10)
+calculate(bound, analysis, u, accuracy=acc, c=c_2, resolution=res)
 # %% markdown
 # ---
 # Now let's try to plot it
 # %% plot Dirichlet's steady state
-f=plot(0, u)
-f.savefig("dirichlet_steady.svg")
-# %% markdown
-# ---
-#
-# ---
-# Let's try the Nuemann's condition on two ends and Dirichlet's condition on two ends.
-#
-# Same process as above.
-#
-# _The steady state area is under construction and may be full of rubbish_
-# %% Neumann's steady
-u=np.copy(arr)
-calculate("steady", u)
-# %% markdown
-# ---
-# Now let's try to plot it
-# %% plot Neumann's steady state
-f=plot(0)
-f.savefig("neumann_steady.svg")
-# %% markdown
-# ---
-#
-# ---
-# ### Let's try the transient state analysis
-#
-# First let's try the Dirichlet's boundary condition
-# %% Dirichlet's transient
-u=np.copy(arr)
-calculate(bound, transient, u, c=c_2, resolution=res)
-# %% markdown
-# ---
-# Let's try to animate it
-# %% Animate Dirichlet's transient state
-animate(plot, u, u.shape[2], "dirichlet_trans.gif", inv)
-# %% markdown
-# ---
-#
-# ---
-# Let's try the Neumann's boundary conditions
-# %% Neumann's transient
-u=np.copy(arr)
-calculate("transient", u, c_2, res)
-# %% markdown
-# ---
-# Let's get it animated
-# %% Animate Neumann's transient state
-animate(plot, u, u.shape[2], "neumann_trans.gif",inv)
+visualize(analysis, u, name , inv)
