@@ -340,9 +340,7 @@ analyze(bound, analysis, system, res, t=time, tres=time_res, accuracy=acc, c=c_2
 #
 #   $c^2$ : 0.005
 #
-#   Output
-#
-#   ![5, 3, 60 20x20x4x : 0.005 transient, 500, 700, 800, 600](dirichlet_transient.gif)
+#   [Output](https://github.com/quantum-corn/assignment-1/blob/master/dirichlet_transient.gif)
 #
 # - system : $0<x<5,\ 0<y<3, 0<t<60$
 #
@@ -365,6 +363,4 @@ analyze(bound, analysis, system, res, t=time, tres=time_res, accuracy=acc, c=c_2
 #
 #   $c^2$ : 0.005
 #
-#   Output
-#
-#   ![5, 3, 60 10x10x4x : 0.005 transient, 10, 400, 10, 800](neumann_transient.gif)
+#   [Output](https://github.com/quantum-corn/assignment-1/blob/master/neumann_transient.gif)
