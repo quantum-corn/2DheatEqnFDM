@@ -307,7 +307,7 @@ analyze(bound, analysis, system, res, t=time, tres=time_res, accuracy=acc,
 #
 #   Output
 #
-#   ![5, 3, steady-state, 500, 700, 800, 600 : 0.01](/home/ash/code_scripts/Research/assignment_1/dirichlet_steady.svg)
+#   ![5, 3, steady-state, 500, 700, 800, 600 : 0.01](./dirichlet_steady.svg)
 #
 # - system : $0<x<5,\ 0<y<3$
 #
@@ -331,7 +331,7 @@ analyze(bound, analysis, system, res, t=time, tres=time_res, accuracy=acc,
 #
 #   Output
 #
-#   ![5, 3, 20x20x, steady-state, 10, 400, 10, 800 : 0.01](/home/ash/code_scripts/Research/assignment_1/neumann_steady.svg)
+#   ![5, 3, 20x20x, steady-state, 10, 400, 10, 800 : 0.01](./neumann_steady.svg)
 #
 # - system : $0<x<5,\ 0<y<3, 0<t<60$
 #
@@ -355,7 +355,7 @@ analyze(bound, analysis, system, res, t=time, tres=time_res, accuracy=acc,
 #
 #   $c^2$ : 0.005
 #
-#   [Output](https://github.com/quantum-corn/assignment_1/blob/master/dirichlet_transient.gif)
+#   ![Output](./dirichlet_transient.gif)
 #
 # - system : $0<x<5,\ 0<y<3, 0<t<60$
 #
@@ -379,4 +379,4 @@ analyze(bound, analysis, system, res, t=time, tres=time_res, accuracy=acc,
 #
 #   $c^2$ : 0.005
 #
-#   [Output](https://github.com/quantum-corn/assignment_1/blob/master/neumann_transient.gif)
+#   ![Output](./neumann_transient.gif)
