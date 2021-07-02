@@ -14,10 +14,10 @@ import matplotlib.animation as ani
 # ### Before we get on with the problem at hand, let's make our life easier by defining function for frequent tasks.
 #
 # First of all let's create the toplevel function to wrap everything. It all the data creates a grid, does the computation and creates and saves the visualization. The fuction takes:
-# - boundary conditions (a 4$\times$2, array-like where each row has the boundary type (`dirichlet` or `neumann` [these are keywords]), and corresponding value (temperature for dirichlet and temperature derivative for neumann) in the top, right, bottom, left sequence),
+# - boundary conditions (a 4 $\times$ 2, array-like where each row has the boundary type (`dirichlet` or `neumann` [these are keywords]), and corresponding value (temperature for dirichlet and temperature derivative for neumann) in the top, right, bottom, left sequence),
 # - type of analysis to be performed (`steady` or `transient` [these are keywords]),
 # - the system dimensions (a 1$\times2$ array-like that has the length of the 2-D system being considered for analysis in the order x, y),
-# - resolution (a 1$\times$2 array-like where each number is the number of computational sub-intervals to add for unit physical length of the system along the corresponding dimension in the sequence x, y),
+# - resolution (a 1 $\times$ 2 array-like where each number is the number of computational sub-intervals to add for unit physical length of the system along the corresponding dimension in the sequence x, y),
 # - the value of $c^2$ as appears in the original differential equation at the top of this documentation (optional, not needed for steady-state analysis, default is 0.005),
 # - the time for which the computation needs to be done for transient analysis (optional, not needed for steady-state analysis, defaults to 60),
 # - the time resolution i.e. the number of sub-intervas to compute per unit of time (optional, not needed for steady state analysis, defaults to 2),
@@ -70,11 +70,11 @@ def animate(plot, u, f, name, inv):
 # %% markdown
 # ---
 # The toplevel function that wraps all computation operations. The function takes:
-# - boundary conditions (a 4$\times$2, array-like where each row has the boundary type (`dirichlet` or `neumann` [these are keywords]), and corresponding value (temperature for dirichlet and temperature derivative for neumann) in the top, right, bottom, left sequence),
+# - boundary conditions (a 4 $\times$ 2, array-like where each row has the boundary type (`dirichlet` or `neumann` [these are keywords]), and corresponding value (temperature for dirichlet and temperature derivative for neumann) in the top, right, bottom, left sequence),
 # - type of analysis to be performed (`steady` or `transient` [these are keywords]),
 # - the dataset (a 3D array-like in the indexing order `arr[y][x][t]`, the time index is not relevant for steady-state analysis, in which case the time dimension is used to compare successive accuracy improvement),
 # - the value of $c^2$ as appears in the original differential equation at the top of this documentation,
-# - resolution (a 1$\times$3 array-like where each number is the number of computational sub-intervals to add for unit physical length of the system along the corresponding dimension in the sequence x, y, t),
+# - resolution (a 1 $\times$ 3 array-like where each number is the number of computational sub-intervals to add for unit physical length of the system along the corresponding dimension in the sequence x, y, t),
 # - accuracy to which to compute the data.
 # %% calculate
 def calculate(bound, type, u, c, res, acc):
@@ -85,7 +85,7 @@ def calculate(bound, type, u, c, res, acc):
 # %% markdown
 # ---
 # The function to manage the steady state computation. The function takes:
-# - boundary conditions (a 4$\times$2, array-like where each row has the boundary type (`dirichlet` or `neumann` [these are keywords]), and corresponding value (temperature for dirichlet and temperature derivative for neumann) in the top, right, bottom, left sequence),
+# - boundary conditions (a 4 $\times$ 2, array-like where each row has the boundary type (`dirichlet` or `neumann` [these are keywords]), and corresponding value (temperature for dirichlet and temperature derivative for neumann) in the top, right, bottom, left sequence),
 # - the dataset (a 3D array-like in the indexing order `arr[y][x][t]`, the time index is used to compare successive accuracy improvement),
 # - accuracy to which to compute the data.
 # %% steady
@@ -99,10 +99,10 @@ def std(bound, u, acc):
 # %% markdown
 # ---
 # The function to manage transient state computation. The function takes:
-# - boundary conditions (a 4$\times$2, array-like where each row has the boundary type (`dirichlet` or `neumann` [these are keywords]), and corresponding value (temperature for dirichlet and temperature derivative for neumann) in the top, right, bottom, left sequence),
+# - boundary conditions (a 4 $\times$ 2, array-like where each row has the boundary type (`dirichlet` or `neumann` [these are keywords]), and corresponding value (temperature for dirichlet and temperature derivative for neumann) in the top, right, bottom, left sequence),
 # - the dataset (a 3D array-like in the indexing order `arr[y][x][t]`),
 # - the value of $c^2$ as appears in the original differential equation at the top of this documentation,
-# - resolution (a 1$\times$3 array-like where each number is the number of computational sub-intervals to add for unit physical length of the system along the corresponding dimension in the sequence x, y, t).
+# - resolution (a 1 $\times$ 3 array-like where each number is the number of computational sub-intervals to add for unit physical length of the system along the corresponding dimension in the sequence x, y, t).
 # %% transient
 def trans(bound, u, c_2, res):
     for t in range(u.shape[2]-1):
@@ -110,12 +110,12 @@ def trans(bound, u, c_2, res):
 # %% markdown
 # ---
 # A function to loop through our dataset manage calculations. The function takes:
-# - boundary conditions (a 4$\times$2, array-like where each row has the boundary type (`dirichlet` or `neumann` [these are keywords]), and corresponding value (temperature for dirichlet and temperature derivative for neumann) in the top, right, bottom, left sequence),
+# - boundary conditions (a 4 $\times$ 2, array-like where each row has the boundary type (`dirichlet` or `neumann` [these are keywords]), and corresponding value (temperature for dirichlet and temperature derivative for neumann) in the top, right, bottom, left sequence),
 # - type of analysis to be performed (`steady` or `transient` [these are keywords]),
 # - the value of time index at which to fill the dataset with computed values,
 # - the dataset (a 3D array-like in the indexing order `arr[y][x][t]`),
 # - the value of $c^2$ as appears in the original differential equation at the top of this documentation, (optional defaults to 0.005),
-# - resolution (a 1$\times$3 array-like where each number is the number of computational sub-intervals to add for unit physical length of the system along the corresponding dimension in the sequence x, y, t, optional, defaults to `[1,1,1]`).
+# - resolution (a 1 $\times$ 3 array-like where each number is the number of computational sub-intervals to add for unit physical length of the system along the corresponding dimension in the sequence x, y, t, optional, defaults to `[1,1,1]`).
 # %% grid fill
 def grid_fill(bound, type, t, u, c_2=0.005, res=[1,1,1]):
         for y in range(0, u.shape[0]):
@@ -175,7 +175,7 @@ def corner(u, x, y):
 # - the y co-ordinate of the grid point in consideration,
 # - the t co-ordinate of the grid point in consideration(not needed except for syntactical consistency),
 # - the value of $c^2$ as appears in the original differential equation at the top of this documentation, (not needed except for syntactical consistency),
-# - resolution (a 1$\times$3 array-like where each number is the number of computational sub-intervals to add for unit physical length of the system along the corresponding dimension in the sequence x, y, t, not needed except for syntactical consistency).
+# - resolution (a 1 $\times$ 3 array-like where each number is the number of computational sub-intervals to add for unit physical length of the system along the corresponding dimension in the sequence x, y, t, not needed except for syntactical consistency).
 # %% Dirichlet
 def dirichlet(value, type, u, x, y, t, c_2, res):
     u[y, x,:]=value
@@ -189,7 +189,7 @@ def dirichlet(value, type, u, x, y, t, c_2, res):
 # - the y co-ordinate of the grid point in consideration,
 # - the t co-ordinate of the grid point in consideration,
 # - the value of $c^2$ as appears in the original differential equation at the top of this documentation,
-# - resolution (a 1$\times$3 array-like where each number is the number of computational sub-intervals to add for unit physical length of the system along the corresponding dimension in the sequence x, y, t).
+# - resolution (a 1 $\times$ 3 array-like where each number is the number of computational sub-intervals to add for unit physical length of the system along the corresponding dimension in the sequence x, y, t).
 # %% Neumann
 def neumann(value, type, u, x, y, t, c_2, res):
     ev=edge(u, x,y)
@@ -226,7 +226,7 @@ def neumann(value, type, u, x, y, t, c_2, res):
 # - the y co-ordinate of the grid point in consideration,
 # - the t co-ordinate of the grid point in consideration,
 # - the value of $c^2$ as appears in the original differential equation at the top of this documentation,
-# - resolution (a 1$\times$3 array-like where each number is the number of computational sub-intervals to add for unit physical length of the system along the corresponding dimension in the sequence x, y, t),
+# - resolution (a 1 $\times$ 3 array-like where each number is the number of computational sub-intervals to add for unit physical length of the system along the corresponding dimension in the sequence x, y, t),
 # - the value of the $u(x+\Delta x, y, t)$,
 # - the value of the $u(x-\Delta x, y, t)$,
 # - the value of the $u(x, y+\Delta y, t)$,
@@ -246,7 +246,7 @@ def steady(u, x, y, t, c_2, res, xp, xm, yp, ym):
 # - the y co-ordinate of the grid point in consideration,
 # - the t co-ordinate of the grid point in consideration,
 # - the value of $c^2$ as appears in the original differential equation at the top of this documentation,
-# - resolution (a 1$\times$3 array-like where each number is the number of computational sub-intervals to add for unit physical length of the system along the corresponding dimension in the sequence x, y, t),
+# - resolution (a 1 $\times$ 3 array-like where each number is the number of computational sub-intervals to add for unit physical length of the system along the corresponding dimension in the sequence x, y, t),
 # - the value of the $u(x+\Delta x, y, t)$,
 # - the value of the $u(x-\Delta x, y, t)$,
 # - the value of the $u(x, y+\Delta y, t)$,
@@ -282,6 +282,7 @@ analyze(bound, analysis, system, res, t=time, tres=time_res, accuracy=acc, c=c_2
 # - system : $0<x<5,\ 0<y<3$
 #
 #   boundary :
+#
 #       - top : isothermal, 500
 #
 #       - right : isothermal, 700
@@ -294,11 +295,12 @@ analyze(bound, analysis, system, res, t=time, tres=time_res, accuracy=acc, c=c_2
 #
 #   Output
 #
-#   ![5, 3, steady-state, 500, 700, 800, 600 : 0.01](dirichlet_steady.svg)
+#   ![5, 3, steady-state, 500, 700, 800, 600 : 0.01](/home/ash/code_scripts/Research/assignment_1/dirichlet_steady.svg)
 #
 # - system : $0<x<5,\ 0<y<3$
 #
 #   boundary :
+#
 #       - top : adiabatic, 10
 #
 #       - right : isothermal, 400
@@ -309,19 +311,20 @@ analyze(bound, analysis, system, res, t=time, tres=time_res, accuracy=acc, c=c_2
 #
 #   resolution :
 #
-#       - $x$ : 20
+#       - x : 20
 #
-#       - $y$ : 20
+#       - y : 20
 #
 #   accuracy : 0.01
 #
 #   Output
 #
-#   ![5, 3, 20x20x, steady-state, 10, 400, 10, 800 : 0.01](neumann_steady.svg)
+#   ![5, 3, 20x20x, steady-state, 10, 400, 10, 800 : 0.01](/home/ash/code_scripts/Research/assignment_1/neumann_steady.svg)
 #
 # - system : $0<x<5,\ 0<y<3, 0<t<60$
 #
 #   boundary :
+#
 #       - top : isothermal, 500
 #
 #       - right : isothermal, 700
@@ -332,11 +335,11 @@ analyze(bound, analysis, system, res, t=time, tres=time_res, accuracy=acc, c=c_2
 #
 #   resolution :
 #
-#       - $x$ : 20
+#       - x : 20
 #
-#       - $y$ : 20
+#       - y : 20
 #
-#       - $t$ : 4
+#       - t : 4
 #
 #   $c^2$ : 0.005
 #
@@ -345,6 +348,7 @@ analyze(bound, analysis, system, res, t=time, tres=time_res, accuracy=acc, c=c_2
 # - system : $0<x<5,\ 0<y<3, 0<t<60$
 #
 #   boundary :
+#
 #       - top : adiabatic, 10
 #
 #       - right : isothermal, 400
@@ -355,11 +359,11 @@ analyze(bound, analysis, system, res, t=time, tres=time_res, accuracy=acc, c=c_2
 #
 #   resolution :
 #
-#       - $x$ : 20
+#       - x : 20
 #
-#       - $y$ : 20
+#       - y : 20
 #
-#       - $t$ : 4
+#       - t : 4
 #
 #   $c^2$ : 0.005
 #
