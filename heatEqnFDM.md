@@ -398,26 +398,26 @@ def neumann(value, type, u, x, y, t, c_2, res):
     ev=edge(u, x,y)
     cv=corner(u, x,y)
     if (ev==0 and cv==-1):
-        type(u, x, y, t, c_2, res, xp=u[y][x+1][t], xm=u[y][x-1][t], ym=u[y-1][x][t],
-        yp=u[y-1][x][t]+2*res[0]**-1*value)
+        type(u, x, y, t, c_2, res, xp=u[y][x+1][t], xm=u[y][x-1][t],
+        ym=u[y-1][x][t], yp=u[y-1][x][t]+2*res[0]**-1*value)
     elif(ev==0 and cv==0):
         type(u, x, y, t, c_2, res, yp=u[y-1][x][t]+2*res[0]**-1*value,
         xp=u[y][x-1][t]+2*res[1]**-1*value, xm=u[y][x-1][t], ym=u[y-1][x][t])
     elif (ev==1 and cv==-1):
-        type(u, x, y, t, c_2, res, xp=u[y][x-1][t]+2*res[1]**-1*value, xm=u[y][x-1][t],
-        yp=u[y+1][x][t], ym=u[y-1][x][t])
+        type(u, x, y, t, c_2, res, xp=u[y][x-1][t]+2*res[1]**-1*value,
+        xm=u[y][x-1][t], yp=u[y+1][x][t], ym=u[y-1][x][t])
     elif (ev==1 and cv==1):
         type(u, x, y, t, c_2, res, xp=u[y][x-1][t]+2*res[1]**-1*value,
         ym=u[y+1][x][t]-2*res[0]**-1*value, xm=u[y][x-1][t], yp=u[y+1][x][t])
     elif (ev==2 and cv==-1):
-        type(u, x, y, t, c_2, res, ym=u[y+1][x][t]-2*res[0]**-1*value, xp=u[y][x+1][t],
-        xm=u[y][x-1][t], yp=u[y+1][x][t])
+        type(u, x, y, t, c_2, res, ym=u[y+1][x][t]-2*res[0]**-1*value,
+        xp=u[y][x+1][t], xm=u[y][x-1][t], yp=u[y+1][x][t])
     elif (ev==2 and cv==2):
         type(u, x, y, t, c_2, res, ym=u[y+1][x][t]-2*res[0]**-1*value,
         xm=u[y][x+1][t]-2*res[1]**-1*value, xp=u[y][x+1][t], yp=u[y+1][x][t])
     elif (ev==3 and cv==-1):
-        type(u, x, y, t, c_2, res, xm=u[y][x+1][t]-2*res[1]**-1*value, xp=u[y][x+1][t],
-        yp=u[y+1][x][t], ym=u[y-1][x][t])
+        type(u, x, y, t, c_2, res, xm=u[y][x+1][t]-2*res[1]**-1*value,
+        xp=u[y][x+1][t], yp=u[y+1][x][t], ym=u[y-1][x][t])
     elif (ev==3 and cv==3):
         type(u, x, y, t, c_2, res, xm=u[y][x+1][t]-2*res[1]**-1*value,
         yp=u[y-1][x][t]+2*res[0]**-1*value, xp=u[y][x+1][t], ym=u[y-1][x][t])
@@ -520,8 +520,8 @@ bound=[[dirichlet, 500], [dirichlet, 700], [dirichlet, 800], [dirichlet, 600]]
 analysis=transient
 name="dirichlet_transient.gif"
 inv=50
-analyze(bound, analysis, system, res, t=time, tres=time_res, accuracy=acc, c=c_2,
-        name=name, interval=inv)
+analyze(bound, analysis, system, res, t=time, tres=time_res, accuracy=acc,
+            c=c_2, name=name, interval=inv)
 ```
 :::
 
@@ -538,13 +538,13 @@ Next up some results. {#next-up-some-results}
 
     boundary :
 
-            - top : isothermal, 500
+        - top : isothermal, 500
 
-            - right : isothermal, 700
+        - right : isothermal, 700
 
-            - bottom : isothermal, 800
+        - bottom : isothermal, 800
 
-            - left : isothermal, 600
+        - left : isothermal, 600
 
     accuracy : 0.01
 
@@ -557,19 +557,19 @@ Next up some results. {#next-up-some-results}
 
     boundary :
 
-            - top : adiabatic, 10
+        - top : adiabatic, 10
 
-            - right : isothermal, 400
+        - right : isothermal, 400
 
-            - bottom : adiabatic, 10
+        - bottom : adiabatic, 10
 
-            - left : isothermal, 800
+        - left : isothermal, 800
 
     resolution :
 
-            - x : 20
+        - x : 20
 
-            - y : 20
+        - y : 20
 
     accuracy : 0.01
 
@@ -582,47 +582,47 @@ Next up some results. {#next-up-some-results}
 
     boundary :
 
-            - top : isothermal, 500
+        - top : isothermal, 500
 
-            - right : isothermal, 700
+        - right : isothermal, 700
 
-            - bottom : isothermal, 800
+        - bottom : isothermal, 800
 
-            - left : isothermal, 600
+        - left : isothermal, 600
 
     resolution :
 
-            - x : 20
+        - x : 20
 
-            - y : 20
+        - y : 20
 
-            - t : 4
+        - t : 4
 
     $c^2$ : 0.005
 
-    [Output](https://github.com/quantum-corn/assignment-1/blob/master/dirichlet_transient.gif)
+    [Output](https://github.com/quantum-corn/assignment_1/blob/master/dirichlet_transient.gif)
 
 -   system : $0<x<5,\ 0<y<3, 0<t<60$
 
     boundary :
 
-            - top : adiabatic, 10
+        - top : adiabatic, 10
 
-            - right : isothermal, 400
+        - right : isothermal, 400
 
-            - bottom : adiabatic, 10
+        - bottom : adiabatic, 10
 
         - left : isothermal, 800
 
     resolution :
 
-            - x : 20
+        - x : 20
 
-            - y : 20
+        - y : 20
 
-            - t : 4
+        - t : 4
 
     $c^2$ : 0.005
 
-    [Output](https://github.com/quantum-corn/assignment-1/blob/master/neumann_transient.gif)
+    [Output](https://github.com/quantum-corn/assignment_1/blob/master/neumann_transient.gif)
 :::

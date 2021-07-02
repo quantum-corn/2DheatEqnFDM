@@ -25,7 +25,8 @@ import matplotlib.animation as ani
 # - the name of the file to save the generated visual as (optional, defaults to `analysis.gif`),
 # - interval through which each frame in the visual lasts (optional, not needed for steady state analysis, defaults to 200 ms).
 # %% analyze
-def analyze(bound, type, sys_scale, res, c=0.005, t=60, tres=2, accuracy=0.1, name="analysis.gif", interval=200):
+def analyze(bound, type, sys_scale, res, c=0.005, t=60, tres=2, accuracy=0.1,
+            name="analysis.gif", interval=200):
     res+=[tres]
     u=np.zeros((sys_scale[1]*res[1]+1,sys_scale[0]*res[0]+1,t*res[2]+1))
     calculate(bound, type, u, c, res, accuracy)
@@ -124,7 +125,8 @@ def grid_fill(bound, type, t, u, c_2=0.005, res=[1,1,1]):
                 if(ev!=-1):
                     bound[ev][0](bound[ev][1], type, u, x, y, t, c_2, res)
                 else:
-                    type(u, x, y, t, c_2, res, xp=u[y][x+1][t], xm=u[y][x-1][t], yp=u[y+1][x][t], ym=u[y-1][x][t])
+                    type(u, x, y, t, c_2, res, xp=u[y][x+1][t], xm=u[y][x-1][t],
+                    yp=u[y+1][x][t], ym=u[y-1][x][t])
 # %% markdown
 # ---
 # The function to determine whether a grid point is a boundary point. The function takes:
@@ -195,21 +197,29 @@ def neumann(value, type, u, x, y, t, c_2, res):
     ev=edge(u, x,y)
     cv=corner(u, x,y)
     if (ev==0 and cv==-1):
-        type(u, x, y, t, c_2, res, xp=u[y][x+1][t], xm=u[y][x-1][t], ym=u[y-1][x][t], yp=u[y-1][x][t]+2*res[0]**-1*value)
+        type(u, x, y, t, c_2, res, xp=u[y][x+1][t], xm=u[y][x-1][t],
+        ym=u[y-1][x][t], yp=u[y-1][x][t]+2*res[0]**-1*value)
     elif(ev==0 and cv==0):
-        type(u, x, y, t, c_2, res, yp=u[y-1][x][t]+2*res[0]**-1*value, xp=u[y][x-1][t]+2*res[1]**-1*value, xm=u[y][x-1][t], ym=u[y-1][x][t])
+        type(u, x, y, t, c_2, res, yp=u[y-1][x][t]+2*res[0]**-1*value,
+        xp=u[y][x-1][t]+2*res[1]**-1*value, xm=u[y][x-1][t], ym=u[y-1][x][t])
     elif (ev==1 and cv==-1):
-        type(u, x, y, t, c_2, res, xp=u[y][x-1][t]+2*res[1]**-1*value, xm=u[y][x-1][t], yp=u[y+1][x][t], ym=u[y-1][x][t])
+        type(u, x, y, t, c_2, res, xp=u[y][x-1][t]+2*res[1]**-1*value,
+        xm=u[y][x-1][t], yp=u[y+1][x][t], ym=u[y-1][x][t])
     elif (ev==1 and cv==1):
-        type(u, x, y, t, c_2, res, xp=u[y][x-1][t]+2*res[1]**-1*value, ym=u[y+1][x][t]-2*res[0]**-1*value, xm=u[y][x-1][t], yp=u[y+1][x][t])
+        type(u, x, y, t, c_2, res, xp=u[y][x-1][t]+2*res[1]**-1*value,
+        ym=u[y+1][x][t]-2*res[0]**-1*value, xm=u[y][x-1][t], yp=u[y+1][x][t])
     elif (ev==2 and cv==-1):
-        type(u, x, y, t, c_2, res, ym=u[y+1][x][t]-2*res[0]**-1*value, xp=u[y][x+1][t], xm=u[y][x-1][t], yp=u[y+1][x][t])
+        type(u, x, y, t, c_2, res, ym=u[y+1][x][t]-2*res[0]**-1*value,
+        xp=u[y][x+1][t], xm=u[y][x-1][t], yp=u[y+1][x][t])
     elif (ev==2 and cv==2):
-        type(u, x, y, t, c_2, res, ym=u[y+1][x][t]-2*res[0]**-1*value, xm=u[y][x+1][t]-2*res[1]**-1*value, xp=u[y][x+1][t], yp=u[y+1][x][t])
+        type(u, x, y, t, c_2, res, ym=u[y+1][x][t]-2*res[0]**-1*value,
+        xm=u[y][x+1][t]-2*res[1]**-1*value, xp=u[y][x+1][t], yp=u[y+1][x][t])
     elif (ev==3 and cv==-1):
-        type(u, x, y, t, c_2, res, xm=u[y][x+1][t]-2*res[1]**-1*value, xp=u[y][x+1][t], yp=u[y+1][x][t], ym=u[y-1][x][t])
+        type(u, x, y, t, c_2, res, xm=u[y][x+1][t]-2*res[1]**-1*value,
+        xp=u[y][x+1][t], yp=u[y+1][x][t], ym=u[y-1][x][t])
     elif (ev==3 and cv==3):
-        type(u, x, y, t, c_2, res, xm=u[y][x+1][t]-2*res[1]**-1*value, yp=u[y-1][x][t]+2*res[0]**-1*value, xp=u[y][x+1][t], ym=u[y-1][x][t])
+        type(u, x, y, t, c_2, res, xm=u[y][x+1][t]-2*res[1]**-1*value,
+        yp=u[y-1][x][t]+2*res[0]**-1*value, xp=u[y][x+1][t], ym=u[y-1][x][t])
 # %% markdown
 # ---
 #
@@ -253,7 +263,8 @@ def steady(u, x, y, t, c_2, res, xp, xm, yp, ym):
 # - the value of the $u(x, y-\Delta y, t)$.
 # %% transient
 def transient(u, x, y, t, c_2, res, xp, xm, yp, ym):
-        u[y][x][t+1]=u[y][x][t]+(res[2]**-1*c_2*(res[1]*res[0])**2)*(res[0]**-2*(xp+xm-2*u[y][x][t])+res[1]**-2*(yp+ym-2*u[y][x][t]))
+        u[y][x][t+1]=u[y][x][t]+(res[2]**-1*c_2*(res[1]*res[0])**2)*
+        (res[0]**-2*(xp+xm-2*u[y][x][t])+res[1]**-2*(yp+ym-2*u[y][x][t]))
 # %% markdown
 # ---
 #
@@ -272,7 +283,8 @@ bound=[[dirichlet, 500], [dirichlet, 700], [dirichlet, 800], [dirichlet, 600]]
 analysis=transient
 name="dirichlet_transient.gif"
 inv=50
-analyze(bound, analysis, system, res, t=time, tres=time_res, accuracy=acc, c=c_2, name=name, interval=inv)
+analyze(bound, analysis, system, res, t=time, tres=time_res, accuracy=acc,
+            c=c_2, name=name, interval=inv)
 # %% markdown
 # ---
 #
