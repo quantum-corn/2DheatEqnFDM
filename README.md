@@ -2,6 +2,8 @@
 
 $u_t=c^2\nabla^2u:0<x<a,\ 0<y<b$
 
+You can play around with the code at : [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/quantum-corn/2DheatEqnFDM/master?filepath=heatEqnFDM.ipynb)
+
 --------------------------------------------------------------------------------
 
 ## Let's import the required packages first of all.
